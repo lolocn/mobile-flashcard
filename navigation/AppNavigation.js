@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Text, Platform } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import DeckList from '../components/DeckList'
 import AddDeck from '../components/AddDeck'
@@ -13,9 +12,7 @@ import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { purple, gray, white } from '../utils/colors'
 
 const Tab = createBottomTabNavigator()
-const Stack = Platform.OS === 'ios' 
-      ? createStackNavigator()
-      : createMaterialTopTabNavigator()
+const Stack = createStackNavigator()
 
 function Tabs() {
   return (
@@ -38,7 +35,7 @@ function Tabs() {
           } else if (route.name === 'AddDeck') {
             return <Text>Add Decks</Text>
           }
-        }
+        },
       })}
     >
       <Tab.Screen name='Decks' component={DeckList}/>
@@ -52,7 +49,8 @@ class AppNavigation extends Component {
   render() {
     return(
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{
+        <Stack.Navigator 
+          screenOptions={{
             headerStyle: {
               backgroundColor: purple
             },
@@ -61,15 +59,16 @@ class AppNavigation extends Component {
             },
             headerBackTitleStyle: {
               color: white
-            }
+            },
           }}>
           <Stack.Screen name='Home'>
             {Tabs}
           </Stack.Screen>
           <Stack.Screen name='DeckDetail' component={DeckDetail} 
             options={({ route }) => {
+              console.log(route.params.title)
               return {
-                title: route.params.title
+                title: route && route.params.title ? route.params.title : ''
               }
             }}></Stack.Screen>
           <Stack.Screen name='AddCard' component={AddCard} 
